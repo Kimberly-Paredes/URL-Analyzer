@@ -43,11 +43,21 @@ function Hero() {
     const [url, setUrl] = useState("");
     const [verdict, setVerdict] = useState<Verdict>("idle");
 
-    function handleCheck() {
+    async function handleCheck() {
         if (!url) return;
         setVerdict("checking");
-        // Placeholder timing — replace with a real fetch() to your backend's /check endpoint
-        setTimeout(() => setVerdict("safe"), 900);
+
+        try {
+            const response = await fetch(
+                `http://localhost:8000/check?url=${encodeURIComponent(url)}`,
+                { method: "POST" }
+            );
+            const data = await response.json();
+            setVerdict(data.verdict === "malicious" ? "malicious" : "safe");
+        } catch (err) {
+            console.error(err);
+            setVerdict("idle");
+        }
     }
 
     const verdictConfig: Record<Verdict, { label: string; color: string; dot: string }> = {
