@@ -49,7 +49,7 @@ function Hero() {
 
         try {
             const response = await fetch(
-                `http://localhost:8000/check?url=${encodeURIComponent(url)}`,
+                `${import.meta.env.VITE_API_URL}/check?url=${encodeURIComponent(url)}`,
                 { method: "POST" }
             );
             const data = await response.json();
