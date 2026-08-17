@@ -10,7 +10,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "https://your-actual-vercel-url.vercel.app"],
+    allow_origins=["http://localhost:5173", "https://url-virus-detector-flame.vercel.app"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
