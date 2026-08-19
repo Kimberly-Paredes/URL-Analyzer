@@ -172,7 +172,7 @@ git pull
 
 Built by **Kimberly Paredes**
 
-- GitHub: [github.com/BlueSocks-code](https://github.com/BlueSocks-code)
+- GitHub: [github.com/Kimberly-Paredes](https://github.com/Kimberly-Paredes)
 - LinkedIn: www.linkedin.com/in/kimberly-paredes-gribova
 
 Built as a hands-on project to go from frontend-only knowledge to a complete, deployed full-stack application — covering backend API design, database integration, containerization, deployment, and production security practices along the way.
