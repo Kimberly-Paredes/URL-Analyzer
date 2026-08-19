@@ -6,7 +6,7 @@ import models
 from services.aggregator import analyze_url
 from fastapi.middleware.cors import CORSMiddleware
 from services.turnstile import verify_turnstile
-from fastapi import HTTPExceptio
+from fastapi import HTTPException
 
 app = FastAPI()
 
