@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+
 
 type Verdict = "idle" | "checking" | "safe" | "malicious";
 
@@ -42,14 +43,26 @@ function Header() {
 function Hero() {
     const [url, setUrl] = useState("");
     const [verdict, setVerdict] = useState<Verdict>("idle");
+    const [turnstileToken, setTurnstileToken] = useState("");
+    const widgetRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        // @ts-ignore - Turnstile loads globally via the script tag in index.html
+        if (window.turnstile && widgetRef.current) {
+            // @ts-ignore
+            window.turnstile.render(widgetRef.current, {
+                sitekey: "0x4AAAAAAEVY8Quh3hqcFGlT",
+                callback: (token: string) => setTurnstileToken(token),
+            });
+        }
+    }, []);
 
     async function handleCheck() {
-        if (!url) return;
+        if (!url || !turnstileToken) return;
         setVerdict("checking");
-
         try {
             const response = await fetch(
-                `${import.meta.env.VITE_API_URL}/check?url=${encodeURIComponent(url)}`,
+                `${import.meta.env.VITE_API_URL}/check?url=${encodeURIComponent(url)}&turnstile_token=${turnstileToken}`,
                 { method: "POST" }
             );
             const data = await response.json();
@@ -81,7 +94,6 @@ function Hero() {
                     Paste any URL and get an instant read against live threat-intelligence
                     sources — no account, no tracking, just a straight answer.
                 </p>
-
                 <div className="bg-white rounded-2xl shadow-xl p-2 flex gap-2 items-center max-w-xl mx-auto">
                     <input
                         type="url"
@@ -97,7 +109,7 @@ function Hero() {
                         Analyze
                     </button>
                 </div>
-
+                <div ref={widgetRef} className="mt-4 flex justify-center"></div>
                 <div className="flex items-center justify-center gap-2 mt-5">
                     <span className={`w-2 h-2 rounded-full ${v.dot}`}/>
                     <span className={`text-sm font-medium ${v.color}`}>{v.label}</span>
