@@ -5,6 +5,8 @@ from database import engine, Base, get_db
 import models
 from services.aggregator import analyze_url
 from fastapi.middleware.cors import CORSMiddleware
+from services.turnstile import verify_turnstile
+from fastapi import HTTPExceptio
 
 app = FastAPI()
 
@@ -22,7 +24,10 @@ def read_root():
     return {"message": "API is running"}
 
 @app.post("/check")
-def check_url(url: str, db: Session = Depends(get_db)):
+def check_url(url: str, turnstile_token: str, db: Session = Depends(get_db)):
+    if not verify_turnstile(turnstile_token):
+        raise HTTPException(status_code=403, detail="CAPTCHA verification failed")
+
     existing = db.query(models.Lookup).filter(models.Lookup.url == url).first()
     if existing:
         return {
