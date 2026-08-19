@@ -48,6 +48,21 @@ Building actual malware/phishing detection from scratch would require massive th
 
 ---
 
+## Security: CAPTCHA Protection
+
+The `/check` endpoint is publicly accessible, so it's protected with [Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/) to prevent automated abuse.
+
+**How it works:**
+1. The frontend renders a Turnstile widget, which generates a one-time verification token once the user completes it.
+2. That token is sent alongside the URL to the backend's `/check` endpoint.
+3. The backend independently verifies the token with Cloudflare's API before processing any request — a request without a valid token is rejected with `403 Forbidden`, regardless of what the frontend sends.
+
+This matters because frontend-only checks are never sufficient — anyone can call the API directly (e.g. via `curl`), bypassing the widget entirely. The real protection is the backend's independent verification step, not the widget itself.
+
+**Why this was added:** without it, the `/check` endpoint had no safeguard against scripted abuse, which could exhaust the free-tier VirusTotal rate limit (4 requests/minute) or run up usage on a paid tier.
+
+---
+
 ## Why caching matters here
 
 `/check` looks up the URL in Postgres first before calling the external APIs. This matters for two reasons:
@@ -152,3 +167,12 @@ git pull
 - A caching layer that respects external rate limits
 - Containerization with Docker and Docker Compose for environment parity between local dev and (eventual) production
 - A disciplined git workflow (branches, PRs, meaningful commit history)
+
+## Author
+
+Built by **Kimberly Paredes**
+
+- GitHub: [github.com/BlueSocks-code](https://github.com/BlueSocks-code)
+- LinkedIn: www.linkedin.com/in/kimberly-paredes-gribova
+
+Built as a hands-on project to go from frontend-only knowledge to a complete, deployed full-stack application — covering backend API design, database integration, containerization, deployment, and production security practices along the way.
