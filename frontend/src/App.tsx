@@ -168,7 +168,7 @@ function Footer() {
                         VirusTotal.</p>
                 </div>
                 <div className="flex gap-6 text-sm">
-                    <a href="#" className="hover:text-white transition">GitHub</a>
+                    <a href="https://github.com/Kimberly-Paredes/URL-Analyzer.git" className="hover:text-white transition">GitHub</a>
                     <a href="#" className="hover:text-white transition">Contact</a>
                 </div>
             </div>
